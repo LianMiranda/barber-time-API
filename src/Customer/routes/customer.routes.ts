@@ -11,4 +11,8 @@ router.get('/customers', async(req,res) => {
     controller.findAll(req,res)
 })
 
+router.get('/customer/:id', async(req,res) => {
+    controller.findById(req,res)
+})
+
 export {router}
