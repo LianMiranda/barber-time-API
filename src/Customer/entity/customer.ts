@@ -4,6 +4,7 @@ class Customer{
     public email!: string
     public password!: string
     public cpf!: string
+    public cellphone_number!: string
 }
 
 export {Customer}
