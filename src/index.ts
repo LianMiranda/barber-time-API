@@ -1,15 +1,11 @@
-import express from 'express'
-import { connection } from './Customer/adapter/database/connection';
+import express from "express";
 const app = express();
-app.use(express.urlencoded({extended: true}))   
-app.use(express.json())
+import "./Customer/adapter/database/connection";
+
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.get("/", (req, res) => {
-        res.send("API RODANDO 🚀")
-})
+  res.send("API RODANDO 🚀");
+});
 
-
-connection.connect(() => {
-        console.log("Database connection successful!");
-})
-
-export {app}
+export { app };
