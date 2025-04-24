@@ -28,12 +28,17 @@ class DatabaseRepository implements RepositoryInterface {
     }
   }
 
-  findById(id: string): Promise<Customer> {
+  async findAll(): Promise<unknown> {
+    const query = "SELECT * FROM customers";
+    const [rows] = await connection.query(query);
+    
+    return rows;
+  }
+
+  async findById(id: string): Promise<unknown> {
     throw new Error("Method not implemented.");
   }
-  findAll(): Promise<Customer[] | null> {
-    throw new Error("Method not implemented.");
-  }
+
   update(data: object): Promise<boolean> {
     throw new Error("Method not implemented.");
   }

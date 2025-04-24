@@ -7,4 +7,8 @@ router.post('/customer', async(req,res) => {
     controller.save(req,res)
 })
 
+router.get('/customers', async(req,res) => {
+    controller.findAll(req,res)
+})
+
 export {router}
