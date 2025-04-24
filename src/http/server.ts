@@ -1,7 +1,7 @@
 import { app } from "..";
 import { config } from "dotenv";
-config()
+config();
 
-const port: string | undefined = process.env.PORT
+const port: string | undefined = process.env.PORT;
 
-app.listen(port, () => console.log(`App is running in port ${port}`))
+app.listen(port, () => console.log(`App is running in port ${port}`));

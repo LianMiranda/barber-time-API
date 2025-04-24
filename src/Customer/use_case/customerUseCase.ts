@@ -33,15 +33,15 @@ class CustomerUseCase implements CustomerUseCaseInterface {
   async findAll(): Promise<Customer[]> {
     const customer = await this.repository.findAll();
 
-    if (customer.length == 0)
-      throw new AppError(404, "No users found");
+    if (customer.length == 0) throw new AppError(404, "No users found");
     return customer;
   }
 
   async findById(id: string): Promise<Customer[]> {
     const customer = await this.repository.findById(id);
 
-    if(customer.length == 0) throw new AppError(404,"No users found")
+    if (customer.length == 0) throw new AppError(404, "No users found");
+
     return customer;
   }
 }

@@ -8,5 +8,5 @@ app.use(express.json());
 app.get("/", (req, res) => {
   res.send("API RODANDO 🚀");
 });
-app.use(router)
+app.use(router);
 export { app };

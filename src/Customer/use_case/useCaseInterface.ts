@@ -1,9 +1,9 @@
-import { Customer } from "../entity/customer"
+import { Customer } from "../entity/customer";
 
-interface CustomerUseCaseInterface{
-    save(customer: Customer):Promise<void>
-    findAll():Promise<Customer[]>
-    findById(id: string):Promise<Customer[]>
+interface CustomerUseCaseInterface {
+  save(customer: Customer): Promise<void>;
+  findAll(): Promise<Customer[]>;
+  findById(id: string): Promise<Customer[]>;
 }
 
-export {CustomerUseCaseInterface}
+export { CustomerUseCaseInterface };

@@ -31,7 +31,7 @@ class DatabaseRepository implements RepositoryInterface {
   async findAll(): Promise<Customer[]> {
     const query = "SELECT * FROM customers";
     const [rows] = await connection.query(query);
-    
+
     return rows as Customer[];
   }
 

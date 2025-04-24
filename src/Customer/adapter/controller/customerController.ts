@@ -8,7 +8,7 @@ class CustomerController {
   async save(req: Request, res: Response) {
     try {
       const data: Customer = req.body;
-      
+
       await this.customerUseCase.save(data);
 
       return res.status(201).json({ message: "Usuário criado com sucesso" });
@@ -22,10 +22,9 @@ class CustomerController {
 
   async findAll(req: Request, res: Response) {
     try {
-      const customers = await this.customerUseCase.findAll()
+      const customers = await this.customerUseCase.findAll();
 
       return res.status(200).json({ customers });
-      
     } catch (error) {
       if (error instanceof AppError)
         return res.status(error.statusCode).json({ message: error.message });
@@ -35,18 +34,17 @@ class CustomerController {
   }
 
   async findById(req: Request, res: Response) {
-    const id = req.params.id
+    const id = req.params.id;
     try {
-      const customer = await this.customerUseCase.findById(id)
+      const customer = await this.customerUseCase.findById(id);
 
       return res.status(200).json({ customer });
-      
     } catch (error) {
       console.error(error);
-      
+
       if (error instanceof AppError)
         return res.status(error.statusCode).json({ message: error.message });
-      
+
       return res.status(500).json({ message: "Internal server error" });
     }
   }
