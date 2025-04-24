@@ -1,0 +1,11 @@
+version: '3'
+services:
+  mysql-db:
+    image: mysql:latest
+    restart: always
+    container_name: barber_time_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=1234
+      - MYSQL_DATABASE=barbertimedb
+    ports:
+      - "3307:3306"
