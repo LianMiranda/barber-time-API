@@ -54,7 +54,6 @@ class DatabaseRepository implements RepositoryInterface {
     
     try {
       const [result] = await connection.query(query, [...values, id]);
-      console.log(result);
       
       return (result as any).affectedRows > 0;
     } catch (err) {

@@ -50,10 +50,10 @@ class CustomerUseCase implements CustomerUseCaseInterface {
 
     if (!id) throw new AppError(400, "Invalid id");
     if(id){
-      const userExists = this.findById(id) 
-
-      console.log(userExists);
-      
+      const userExists = await this.findById(id) 
+      if(userExists.length == 0) throw new AppError(404, "No users found")
+    
+      return;
     }
     if (data.full_name) updateData.full_name = data.full_name;
     if (data.email) updateData.email = data.email;
@@ -62,8 +62,6 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       updateData.cellphone_number = data.cellphone_number;
 
     const validDate = updateData;
-    console.log("USECASE: ",validDate);
-
     try {
       await this.repository.update(id, validDate);
     } catch (err: any) {
