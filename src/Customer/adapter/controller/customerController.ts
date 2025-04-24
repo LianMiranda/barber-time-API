@@ -6,12 +6,12 @@ class CustomerController {
   constructor(private customerUseCase: CustomerUseCaseInterface) {}
 
   async save(req: Request, res: Response) {
+    const data: Customer = req.body;
+    
     try {
-      const data: Customer = req.body;
-
       await this.customerUseCase.save(data);
 
-      return res.status(201).json({ message: "Usuário criado com sucesso" });
+      return res.status(201).json({ message: "User created successfully" });
     } catch (error) {
       if (error instanceof AppError)
         return res.status(error.statusCode).json({ message: error.message });
@@ -39,6 +39,24 @@ class CustomerController {
       const customer = await this.customerUseCase.findById(id);
 
       return res.status(200).json({ customer });
+    } catch (error) {
+      console.error(error);
+
+      if (error instanceof AppError)
+        return res.status(error.statusCode).json({ message: error.message });
+
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async update(req: Request, res: Response) {
+    const id = req.params.id;
+    const data = req.body
+
+    try {
+      await this.customerUseCase.update(id, data);
+      return res.status(200).json({message: "User updated successfully"});
+
     } catch (error) {
       console.error(error);
 
