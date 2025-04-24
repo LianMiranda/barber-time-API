@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 } from "uuid";
 import { RepositoryInterface } from "../adapter/repository/repositoryInterface";
 import { Customer } from "../entity/customer";
@@ -20,7 +21,6 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       }
 
       await this.repository.save(customer);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (err: any) {
       if (err.code == "ER_DUP_ENTRY")
         throw new AppError(
@@ -43,6 +43,36 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     if (customer.length == 0) throw new AppError(404, "No users found");
 
     return customer;
+  }
+
+  async update(id: string, data: Partial<Customer>): Promise<void> {
+    const updateData: Partial<Customer> = {};
+
+    if (!id) throw new AppError(400, "Invalid id");
+    if(id){
+      const userExists = this.findById(id) 
+
+      console.log(userExists);
+      
+    }
+    if (data.full_name) updateData.full_name = data.full_name;
+    if (data.email) updateData.email = data.email;
+    if (data.cpf) updateData.cpf = data.cpf;
+    if (data.cellphone_number)
+      updateData.cellphone_number = data.cellphone_number;
+
+    const validDate = updateData;
+    console.log("USECASE: ",validDate);
+
+    try {
+      await this.repository.update(id, validDate);
+    } catch (err: any) {
+      if (err.code == "ER_DUP_ENTRY")
+        throw new AppError(
+          409,
+          "There is already a user with that email or CPF"
+        );
+    }
   }
 }
 
