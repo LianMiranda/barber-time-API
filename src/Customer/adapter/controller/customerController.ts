@@ -33,6 +33,23 @@ class CustomerController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async findById(req: Request, res: Response) {
+    const id = req.params.id
+    try {
+      const customer = await this.customerUseCase.findById(id)
+
+      return res.status(200).json({ customer });
+      
+    } catch (error) {
+      console.error(error);
+      
+      if (error instanceof AppError)
+        return res.status(error.statusCode).json({ message: error.message });
+      
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 export { CustomerController };
