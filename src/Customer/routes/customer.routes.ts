@@ -15,4 +15,8 @@ router.get("/customer/:id", async (req, res) => {
   controller.findById(req, res);
 });
 
+router.put("/customer/:id", async (req, res) => {
+  controller.update(req, res);
+});
+
 export { router };

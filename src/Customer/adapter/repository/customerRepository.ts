@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Customer } from "../../entity/customer";
 import { connection } from "../../../database/connection";
 import { RepositoryInterface } from "./repositoryInterface";
@@ -5,7 +6,7 @@ import { RepositoryInterface } from "./repositoryInterface";
 class DatabaseRepository implements RepositoryInterface {
   async save(customer: Customer): Promise<boolean | Error> {
     const query =
-      "INSERT INTO customers (id,name,email,password,cpf,cellphone_number) VALUES (?,?,?,?,?,?)";
+      "INSERT INTO customers (id,full_name,email,password,cpf,cellphone_number) VALUES (?,?,?,?,?,?)";
 
     const values = [
       customer.id,
@@ -42,8 +43,24 @@ class DatabaseRepository implements RepositoryInterface {
     return rows as Customer[];
   }
 
-  update(data: object): Promise<boolean> {
-    throw new Error("Method not implemented.");
+  async update(id: string, data: Partial<Customer>): Promise<boolean> {
+      const fields = Object.keys(data);
+      const values = Object.values(data);
+    
+      if (fields.length === 0) return false; 
+    
+      const setClause = fields.map(field => `${field} = ?`).join(", ");
+      const query = `UPDATE customers SET ${setClause} WHERE id = ?`;
+    
+    try {
+      const [result] = await connection.query(query, [...values, id]);
+      console.log(result);
+      
+      return (result as any).affectedRows > 0;
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
   }
 }
 
