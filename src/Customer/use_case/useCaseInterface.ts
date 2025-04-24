@@ -2,7 +2,8 @@ import { Customer } from "../entity/customer"
 
 interface CustomerUseCaseInterface{
     save(customer: Customer):Promise<void>
-    findAll():Promise<unknown>
+    findAll():Promise<Customer[]>
+    findById(id: string):Promise<Customer[]>
 }
 
 export {CustomerUseCaseInterface}
