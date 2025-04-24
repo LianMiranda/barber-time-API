@@ -35,8 +35,11 @@ class DatabaseRepository implements RepositoryInterface {
     return rows as Customer[];
   }
 
-  async findById(id: string): Promise<Customer> {
-    throw new Error("Method not implemented.");
+  async findById(id: string): Promise<Customer[]> {
+    const query = "SELECT * FROM customers WHERE id=?";
+    const [rows] = await connection.query(query, id);
+
+    return rows as Customer[];
   }
 
   update(data: object): Promise<boolean> {
