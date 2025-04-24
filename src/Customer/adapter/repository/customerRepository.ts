@@ -1,5 +1,5 @@
 import { Customer } from "../../entity/customer";
-import { connection } from "../database/connection";
+import { connection } from "../../../database/connection";
 import { RepositoryInterface } from "./repositoryInterface";
 
 class DatabaseRepository implements RepositoryInterface {
