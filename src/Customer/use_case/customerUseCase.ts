@@ -14,7 +14,7 @@ class CustomerUseCase implements CustomerUseCaseInterface {
 
       const isNotEmpty = Object.values(customer).every(
         (value) => value !== null && value !== undefined && value.trim() !== ""
-      );
+      );  
 
       if (!isNotEmpty) {
         throw new AppError(400, "Data cannot be empty");
@@ -24,13 +24,14 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     } catch (err: any) {
       console.error(err);
 
-      if (err.code == "ER_DUP_ENTRY")
+      if (err.code == "ER_DUP_ENTRY"){
         throw new AppError(
           409,
-          "There is already a user with that email or CPF"
-        );
+          "There is already a user with that email or CPF"       
+        );     
+      }
 
-      throw new AppError(500, "Internal server error");
+      throw err
     }
   }
 
