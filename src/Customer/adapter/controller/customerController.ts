@@ -12,9 +12,10 @@ class CustomerController {
       await this.customerUseCase.save(data);
 
       return res.status(201).json({ message: "User created successfully" });
-    } catch (error) {
-      if (error instanceof AppError)
-        return res.status(error.statusCode).json({ message: error.message });
+    } catch (err) {     
+      if (err instanceof AppError){
+        return res.status(err.statusCode).json({ message: err.message });
+      }
 
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -25,9 +26,9 @@ class CustomerController {
       const customers = await this.customerUseCase.findAll();
 
       return res.status(200).json({ customers });
-    } catch (error) {
-      if (error instanceof AppError)
-        return res.status(error.statusCode).json({ message: error.message });
+    } catch (err) {
+      if (err instanceof AppError)
+        return res.status(err.statusCode).json({ message: err.message });
 
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -39,11 +40,11 @@ class CustomerController {
       const customer = await this.customerUseCase.findById(id);
 
       return res.status(200).json({ customer });
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
 
-      if (error instanceof AppError)
-        return res.status(error.statusCode).json({ message: error.message });
+      if (err instanceof AppError)
+        return res.status(err.statusCode).json({ message: err.message });
 
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -57,11 +58,11 @@ class CustomerController {
       await this.customerUseCase.update(id, data);
       return res.status(200).json({message: "User updated successfully"});
 
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
+      console.error(err);
 
-      if (error instanceof AppError)
-        return res.status(error.statusCode).json({ message: error.message });
+      if (err instanceof AppError)
+        return res.status(err.statusCode).json({ message: err.message });
 
       return res.status(500).json({ message: "Internal server error" });
     }
