@@ -18,11 +18,8 @@ class DatabaseRepository implements RepositoryInterface {
     ];
 
     try {
-      const create = await connection.query(query, values);
-
-      if (create != undefined) return true;
-
-      return false;
+      await connection.query(query, values);
+      return true;
     } catch (err) {
       console.error(err);
       throw err;
@@ -44,18 +41,17 @@ class DatabaseRepository implements RepositoryInterface {
   }
 
   async update(id: string, data: Partial<Customer>): Promise<boolean> {
-      const fields = Object.keys(data);
-      const values = Object.values(data);
-    
-      if (fields.length === 0) return false; 
-    
-      const setClause = fields.map(field => `${field} = ?`).join(", ");
-      const query = `UPDATE customers SET ${setClause} WHERE id = ?`;
-    
+    const fields = Object.keys(data);
+    const values = Object.values(data);
+
+    if (fields.length === 0) return false;
+
+    const setClause = fields.map((field) => `${field} = ?`).join(", ");
+    const query = `UPDATE customers SET ${setClause} WHERE id = ?`;
+
     try {
-      const [result] = await connection.query(query, [...values, id]);
-      
-      return (result as any).affectedRows > 0;
+      await connection.query(query, [...values, id]);
+      return true;
     } catch (err) {
       console.error(err);
       throw err;
