@@ -8,7 +8,7 @@ import { AppError } from "../../shared/errors/appError";
 class CustomerUseCase implements CustomerUseCaseInterface {
   constructor(private repository: RepositoryInterface) {}
 
-  async save(customer: Customer): Promise<void> {
+  async save(customer: Customer): Promise<boolean | Error> {
     try {
       customer.id = v4();
 
@@ -20,13 +20,17 @@ class CustomerUseCase implements CustomerUseCaseInterface {
         throw new AppError(400, "Data cannot be empty");
       }
 
-      await this.repository.save(customer);
+      return await this.repository.save(customer);
     } catch (err: any) {
+      console.error(err);
+
       if (err.code == "ER_DUP_ENTRY")
         throw new AppError(
           409,
           "There is already a user with that email or CPF"
         );
+
+      throw new AppError(500, "Internal server error");
     }
   }
 
@@ -45,16 +49,14 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     return customer;
   }
 
-  async update(id: string, data: Partial<Customer>): Promise<void> {
+  async update(id: string, data: Partial<Customer>): Promise<boolean | Error> {
     const updateData: Partial<Customer> = {};
 
     if (!id) throw new AppError(400, "Invalid id");
-    if(id){
-      const userExists = await this.findById(id) 
-      if(userExists.length == 0) throw new AppError(404, "No users found")
-    
-      return;
-    }
+
+    const userExists = await this.findById(id);
+    if (userExists.length == 0) throw new AppError(404, "No users found");
+
     if (data.full_name) updateData.full_name = data.full_name;
     if (data.email) updateData.email = data.email;
     if (data.cpf) updateData.cpf = data.cpf;
@@ -63,13 +65,17 @@ class CustomerUseCase implements CustomerUseCaseInterface {
 
     const validDate = updateData;
     try {
-      await this.repository.update(id, validDate);
+      return await this.repository.update(id, validDate);
     } catch (err: any) {
+      console.error(err);
+
       if (err.code == "ER_DUP_ENTRY")
         throw new AppError(
           409,
           "There is already a user with that email or CPF"
         );
+
+      throw new AppError(500, "Internal server error");
     }
   }
 }
