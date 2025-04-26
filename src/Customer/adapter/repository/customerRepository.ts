@@ -8,7 +8,7 @@ class DatabaseRepository implements RepositoryInterface {
     const query =
       "INSERT INTO customers (id,full_name,email,password,cpf,cellphone_number) VALUES (?,?,?,?,?,?)";
 
-    const values = [
+    const values:object = [
       customer.id,
       customer.full_name,
       customer.email,
@@ -51,6 +51,7 @@ class DatabaseRepository implements RepositoryInterface {
 
     try {
       await connection.execute(query, [...values, id]);
+      
       return true;
     } catch (err) {
       console.error(err);
@@ -61,7 +62,7 @@ class DatabaseRepository implements RepositoryInterface {
   async delete(id: string): Promise<boolean | Error> {
     const query = "DELETE FROM customers WHERE id = ? LIMIT 1";
     try {
-      await connection.execute(query, id);
+      await connection.execute(query, [id]);
       return true;
     } catch (err) {
       console.error(err);
