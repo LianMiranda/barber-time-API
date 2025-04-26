@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Customer } from "../../entity/customer";
 import { connection } from "../../../database/connection";
 import { RepositoryInterface } from "./repositoryInterface";
