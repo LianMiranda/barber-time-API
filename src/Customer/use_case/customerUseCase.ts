@@ -51,8 +51,6 @@ class CustomerUseCase implements CustomerUseCaseInterface {
   }
 
   async update(id: string, data: Partial<Customer>): Promise<boolean | Error> {
-    const updateData: Partial<Customer> = {};
-
     if (!id) throw new AppError(400, "Invalid id");
 
     const userExists = await this.findById(id);
@@ -66,18 +64,13 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     if (!isNotEmpty) {
       throw new AppError(400, "Enter at least one piece of information to update");
     }
-    //TODO: fazer o upload da senha
-    if (data.full_name) updateData.full_name = data.full_name;
-    if (data.email) updateData.email = data.email;
-    if (data.cpf) updateData.cpf = data.cpf;
-    if (data.cellphone_number)
-      updateData.cellphone_number = data.cellphone_number;
 
-    const validDate = updateData;
-    console.log(validDate);
-    
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const validFields = Object.fromEntries(Object.entries(data).filter(([_,value]) => value !== undefined && value !== null && value.trim() !== ""))
+
+    //TODO: fazer verificação de senha 
     try {
-      return await this.repository.update(id, validDate);
+      return await this.repository.update(id, validFields);
     } catch (err: any) {
       console.error(err);
 
