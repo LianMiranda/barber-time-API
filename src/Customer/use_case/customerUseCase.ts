@@ -4,6 +4,7 @@ import { RepositoryInterface } from "../adapter/repository/repositoryInterface";
 import { Customer } from "../entity/customer";
 import { CustomerUseCaseInterface } from "./useCaseInterface";
 import { AppError } from "../../shared/errors/appError";
+import { hash } from "../../shared/bcrypt/encryption";
 
 class CustomerUseCase implements CustomerUseCaseInterface {
   constructor(private repository: RepositoryInterface) {}
@@ -19,6 +20,10 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       if (!isNotEmpty) {
         throw new AppError(400, "Data cannot be empty");
       }
+
+      const hash_password = await hash(customer.password);
+
+      customer.password = hash_password
 
       return await this.repository.save(customer);
     } catch (err: any) {
@@ -58,17 +63,26 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     if (userExists == undefined) throw new AppError(404, "No users found");
 
     const isNotEmpty = Object.values(data).some(
-      (value: string) => value !== null && value !== undefined && value.trim() !== ""
+      (value: string) =>
+        value !== null && value !== undefined && value.trim() !== ""
     );
-    
+
     if (!isNotEmpty) {
-      throw new AppError(400, "Enter at least one piece of information to update");
+      throw new AppError(
+        400,
+        "Enter at least one piece of information to update"
+      );
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const validFields = Object.fromEntries(Object.entries(data).filter(([_,value]) => value !== undefined && value !== null && value.trim() !== ""))
+    const validFields = Object.fromEntries(
+      Object.entries(data).filter(
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        ([_, value]) =>
+          value !== undefined && value !== null && value.trim() !== ""
+      )
+    );
 
-    //TODO: fazer verificação de senha 
+    //TODO: fazer verificação de senha
     try {
       return await this.repository.update(id, validFields);
     } catch (err: any) {
@@ -87,16 +101,15 @@ class CustomerUseCase implements CustomerUseCaseInterface {
   async delete(id: string): Promise<boolean | Error> {
     try {
       const userExists = await this.findById(id);
-      if(userExists == undefined) throw new AppError(404, "No users found");
+      if (userExists == undefined) throw new AppError(404, "No users found");
 
       await this.repository.delete(id);
       return true;
     } catch (err) {
-        console.error(err);
-        throw err; 
+      console.error(err);
+      throw err;
     }
   }
-  
 }
 
 export { CustomerUseCase };
