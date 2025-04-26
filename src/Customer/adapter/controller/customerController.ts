@@ -67,6 +67,23 @@ class CustomerController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
+  async delete(req: Request, res: Response) {
+    const id = req.params.id;
+
+    try {
+      await this.customerUseCase.delete(id);
+      return res.status(200).json({message: "User deleted successfully"});
+
+    } catch (err) {
+      console.error(err);
+
+      if (err instanceof AppError)
+        return res.status(err.statusCode).json({ message: err.message });
+
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
 }
 
 export { CustomerController };
