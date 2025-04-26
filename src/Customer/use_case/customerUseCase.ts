@@ -14,7 +14,7 @@ class CustomerUseCase implements CustomerUseCaseInterface {
 
       const isNotEmpty = Object.values(customer).every(
         (value) => value !== null && value !== undefined && value.trim() !== ""
-      );  
+      );
 
       if (!isNotEmpty) {
         throw new AppError(400, "Data cannot be empty");
@@ -24,14 +24,14 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     } catch (err: any) {
       console.error(err);
 
-      if (err.code == "ER_DUP_ENTRY"){
+      if (err.code == "ER_DUP_ENTRY") {
         throw new AppError(
           409,
-          "There is already a user with that email or CPF"       
-        );     
+          "There is already a user with that email or CPF"
+        );
       }
 
-      throw err
+      throw err;
     }
   }
 
@@ -58,6 +58,14 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     const userExists = await this.findById(id);
     if (userExists.length == 0) throw new AppError(404, "No users found");
 
+    const isNotEmpty = Object.values(data).every(
+      (value) => value !== null && value !== undefined && value.trim() !== ""
+    );
+
+    if (!isNotEmpty) {
+      throw new AppError(400, "Enter at least one piece of information to update");
+    }
+
     if (data.full_name) updateData.full_name = data.full_name;
     if (data.email) updateData.email = data.email;
     if (data.cpf) updateData.cpf = data.cpf;
@@ -76,7 +84,7 @@ class CustomerUseCase implements CustomerUseCaseInterface {
           "There is already a user with that email or CPF"
         );
 
-      throw new AppError(500, "Internal server error");
+      throw err;
     }
   }
 }
