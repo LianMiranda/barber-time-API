@@ -56,12 +56,13 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     if (!id) throw new AppError(400, "Invalid id");
 
     const userExists = await this.findById(id);
+
     if (userExists.length == 0) throw new AppError(404, "No users found");
 
-    const isNotEmpty = Object.values(data).every(
-      (value) => value !== null && value !== undefined && value.trim() !== ""
+    const isNotEmpty = Object.values(data).some(
+      (value: string) => value !== null && value !== undefined && value.trim() !== ""
     );
-
+    
     if (!isNotEmpty) {
       throw new AppError(400, "Enter at least one piece of information to update");
     }
@@ -73,6 +74,8 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       updateData.cellphone_number = data.cellphone_number;
 
     const validDate = updateData;
+    console.log(validDate);
+    
     try {
       return await this.repository.update(id, validDate);
     } catch (err: any) {
@@ -87,6 +90,20 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       throw err;
     }
   }
+
+  async delete(id: string): Promise<boolean | Error> {
+    try {
+      const userExists = await this.findById(id);
+      if(userExists.length == 0) throw new AppError(404, "No users found");
+
+      await this.repository.delete(id);
+      return true;
+    } catch (err) {
+        console.error(err);
+        throw err; 
+    }
+  }
+  
 }
 
 export { CustomerUseCase };

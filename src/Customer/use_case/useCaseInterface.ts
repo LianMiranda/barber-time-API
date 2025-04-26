@@ -5,6 +5,7 @@ interface CustomerUseCaseInterface {
   findAll(): Promise<Customer[]>;
   findById(id: string): Promise<Customer[]>;
   update(id: string, data: Partial<Customer>): Promise<boolean | Error>;
+  delete(id: string): Promise<boolean | Error>;
 }
 
 export { CustomerUseCaseInterface };

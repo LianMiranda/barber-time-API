@@ -19,4 +19,8 @@ router.put("/customer/:id", async (req, res) => {
   controller.update(req, res);
 });
 
+router.delete("/customer/:id", async (req, res) => {
+  controller.delete(req, res);
+});
+
 export { router };
