@@ -42,12 +42,12 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     return customer;
   }
 
-  async findById(id: string): Promise<Customer[]> {
+  async findById(id: string): Promise<Customer> {
     const customer = await this.repository.findById(id);
 
     if (customer.length == 0) throw new AppError(404, "No users found");
 
-    return customer;
+    return customer[0];
   }
 
   async update(id: string, data: Partial<Customer>): Promise<boolean | Error> {
@@ -57,7 +57,7 @@ class CustomerUseCase implements CustomerUseCaseInterface {
 
     const userExists = await this.findById(id);
 
-    if (userExists.length == 0) throw new AppError(404, "No users found");
+    if (userExists == undefined) throw new AppError(404, "No users found");
 
     const isNotEmpty = Object.values(data).some(
       (value: string) => value !== null && value !== undefined && value.trim() !== ""
@@ -66,7 +66,7 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     if (!isNotEmpty) {
       throw new AppError(400, "Enter at least one piece of information to update");
     }
-
+    //TODO: fazer o upload da senha
     if (data.full_name) updateData.full_name = data.full_name;
     if (data.email) updateData.email = data.email;
     if (data.cpf) updateData.cpf = data.cpf;
@@ -94,7 +94,7 @@ class CustomerUseCase implements CustomerUseCaseInterface {
   async delete(id: string): Promise<boolean | Error> {
     try {
       const userExists = await this.findById(id);
-      if(userExists.length == 0) throw new AppError(404, "No users found");
+      if(userExists == undefined) throw new AppError(404, "No users found");
 
       await this.repository.delete(id);
       return true;
