@@ -18,7 +18,7 @@ class DatabaseRepository implements RepositoryInterface {
     ];
 
     try {
-      await connection.query(query, values);
+      await connection.execute(query, values);
       return true;
     } catch (err) {
       console.error(err);
@@ -40,7 +40,7 @@ class DatabaseRepository implements RepositoryInterface {
     return rows as Customer[];
   }
 
-  async update(id: string, data: Partial<Customer>): Promise<boolean> {
+  async update(id: string, data: Partial<Customer>): Promise<boolean | Error> {
     const fields = Object.keys(data);
     const values = Object.values(data);
 
@@ -50,11 +50,22 @@ class DatabaseRepository implements RepositoryInterface {
     const query = `UPDATE customers SET ${setClause} WHERE id = ?`;
 
     try {
-      await connection.query(query, [...values, id]);
+      await connection.execute(query, [...values, id]);
       return true;
     } catch (err) {
       console.error(err);
       throw err;
+    }
+  }
+
+  async delete(id: string): Promise<boolean | Error> {
+    const query = "DELETE FROM customers WHERE id = ? LIMIT 1";
+    try {
+      await connection.execute(query, id);
+      return true;
+    } catch (err) {
+      console.error(err);
+      throw err
     }
   }
 }

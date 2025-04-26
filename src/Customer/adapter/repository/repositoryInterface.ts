@@ -5,4 +5,5 @@ export interface RepositoryInterface {
   findById(id: string): Promise<Customer[]>;
   findAll(): Promise<Customer[]>;
   update(id: string, data: Partial<Customer>): Promise<boolean | Error>;
+  delete(id: string): Promise<boolean | Error>
 }
