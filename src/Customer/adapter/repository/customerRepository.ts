@@ -39,6 +39,13 @@ class DatabaseRepository implements RepositoryInterface {
     return rows as Customer[];
   }
 
+  async findByEmail(email: string): Promise<Customer[]> {
+    const query = "SELECT * FROM customers WHERE email=?";
+    const [rows] = await connection.query(query, email);
+
+    return rows as Customer[];
+  }
+
   async update(id: string, data: Partial<Customer>): Promise<boolean | Error> {
     const fields = Object.keys(data);
     const values = Object.values(data);
