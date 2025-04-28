@@ -7,6 +7,7 @@ import { AppError } from "../../shared/errors/appError";
 import { compare, hash } from "../../shared/bcrypt/encryption";
 import { emailValidator } from "../../shared/validations/emailValidatior";
 import { cpfValidator } from "../../shared/validations/cpfValidator";
+import { sign } from "../../shared/validations/jwt";
 
 class CustomerUseCase implements CustomerUseCaseInterface {
   constructor(private repository: RepositoryInterface) {}
@@ -49,6 +50,23 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     }
   }
 
+  async authenticate(email: string, password: string): Promise<string | Error> {
+    if (!email || !password)
+      throw new AppError(400, "Fields cannot be empty");
+
+    const user = await this.findByEmail(email);    
+
+    if (!user) throw new AppError(404, "Invalid credentials");
+
+    const passwordVerification = await compare(password, user.password);
+
+    if (!passwordVerification) throw new AppError(400, "Invalid credentials");
+
+    const token = await sign(user);
+
+    return token;
+  }
+
   async findAll(): Promise<Customer[]> {
     const customer = await this.repository.findAll();
 
@@ -60,6 +78,14 @@ class CustomerUseCase implements CustomerUseCaseInterface {
     const customer = await this.repository.findById(id);
 
     if (customer.length == 0) throw new AppError(404, "No users found");
+    
+    return customer[0];
+  }
+
+  async findByEmail(email: string): Promise<Customer | undefined> {
+    const customer = await this.repository.findByEmail(email);
+
+    if (customer.length == 0) return undefined
 
     return customer[0];
   }
@@ -101,18 +127,26 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       if (!cpfVerification) return cpfVerification;
     }
 
-    if(validFields.new_password) {
-      if(!validFields.current_password) throw new AppError(400, "Current password is required to update the password");
+    if (validFields.new_password) {
+      if (!validFields.current_password)
+        throw new AppError(
+          400,
+          "Current password is required to update the password"
+        );
 
-      const passwordVerification = await compare(validFields.current_password, userExists.password);
+      const passwordVerification = await compare(
+        validFields.current_password,
+        userExists.password
+      );
 
-      if(!passwordVerification) throw new AppError(400, "Current password is incorrect");
+      if (!passwordVerification)
+        throw new AppError(400, "Current password is incorrect");
 
       const hash_password = await hash(validFields.new_password);
       validFields.password = hash_password;
 
-      delete validFields.current_password
-      delete validFields.new_password 
+      delete validFields.current_password;
+      delete validFields.new_password;
     }
 
     try {
