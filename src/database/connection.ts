@@ -28,9 +28,9 @@ async function initDatabase() {
     const sql = fs.readFileSync("init.sql", "utf-8");
     await connection.query(sql);
 
-    console.log("Tabelas verificadas/criadas com sucesso!");
+    console.log("Tables verified/created successfully!");
   } catch (error) {
-    console.error("Erro ao conectar ou inicializar banco de dados:", error);
+    console.error("Error connecting or initializing database:", error);
     process.exit(1);
   }
 }
