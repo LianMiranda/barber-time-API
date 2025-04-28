@@ -5,6 +5,8 @@ import { Customer } from "../entity/customer";
 import { CustomerUseCaseInterface } from "./useCaseInterface";
 import { AppError } from "../../shared/errors/appError";
 import { hash } from "../../shared/bcrypt/encryption";
+import { emailValidator } from "../../shared/validations/emailValidatior";
+import { cpfValidator } from "../../shared/validations/cpfValidator";
 
 class CustomerUseCase implements CustomerUseCaseInterface {
   constructor(private repository: RepositoryInterface) {}
@@ -21,9 +23,16 @@ class CustomerUseCase implements CustomerUseCaseInterface {
         throw new AppError(400, "Data cannot be empty");
       }
 
+      const emailVerification = await emailValidator(customer.email);
+
+      if (!emailVerification) throw new AppError(400, "Invalid email");
+
+      const cpfVerification = await cpfValidator(customer.cpf);
+      if (!cpfVerification) throw new AppError(400, "Invalid CPF");
+
       const hash_password = await hash(customer.password);
 
-      customer.password = hash_password
+      customer.password = hash_password;
 
       return await this.repository.save(customer);
     } catch (err: any) {
@@ -81,6 +90,16 @@ class CustomerUseCase implements CustomerUseCaseInterface {
           value !== undefined && value !== null && value.trim() !== ""
       )
     );
+
+    if (validFields.email) {
+      const emailVerification = await emailValidator(validFields.email);
+      if (!emailVerification) throw new AppError(400, "Invalid email");
+    }
+
+    if (validFields.cpf) {
+      const cpfVerification = await cpfValidator(validFields.cpf);
+      if (!cpfVerification) return cpfVerification;
+    }
 
     //TODO: fazer verificação de senha
     try {
