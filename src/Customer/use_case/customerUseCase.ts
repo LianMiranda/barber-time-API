@@ -4,7 +4,7 @@ import { RepositoryInterface } from "../adapter/repository/repositoryInterface";
 import { Customer } from "../entity/customer";
 import { CustomerUseCaseInterface } from "./useCaseInterface";
 import { AppError } from "../../shared/errors/appError";
-import { hash } from "../../shared/bcrypt/encryption";
+import { compare, hash } from "../../shared/bcrypt/encryption";
 import { emailValidator } from "../../shared/validations/emailValidatior";
 import { cpfValidator } from "../../shared/validations/cpfValidator";
 
@@ -101,7 +101,20 @@ class CustomerUseCase implements CustomerUseCaseInterface {
       if (!cpfVerification) return cpfVerification;
     }
 
-    //TODO: fazer verificação de senha
+    if(validFields.new_password) {
+      if(!validFields.current_password) throw new AppError(400, "Current password is required to update the password");
+
+      const passwordVerification = await compare(validFields.current_password, userExists.password);
+
+      if(!passwordVerification) throw new AppError(400, "Current password is incorrect");
+
+      const hash_password = await hash(validFields.new_password);
+      validFields.password = hash_password;
+
+      delete validFields.current_password
+      delete validFields.new_password 
+    }
+
     try {
       return await this.repository.update(id, validFields);
     } catch (err: any) {

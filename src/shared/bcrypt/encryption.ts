@@ -14,3 +14,13 @@ export async function hash(password: string): Promise<string> {
     throw err;
   }
 }
+
+export async function compare(new_password: string, current_password: string){
+  try {
+    const verification = await bcrypt.compare(new_password, current_password);
+    return verification;
+  }catch (err) {
+    console.error(err);
+    throw err;
+  }
+}
