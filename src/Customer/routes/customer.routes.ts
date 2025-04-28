@@ -7,6 +7,10 @@ router.post("/customer", async (req, res) => {
   controller.save(req, res);
 });
 
+router.post("/auth", async (req, res) => {
+  controller.authenticate(req, res);
+});
+
 router.get("/customers", async (req, res) => {
   controller.findAll(req, res);
 });

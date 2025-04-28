@@ -7,15 +7,30 @@ class CustomerController {
 
   async save(req: Request, res: Response) {
     const data: Customer = req.body;
-    
+
     try {
       await this.customerUseCase.save(data);
 
       return res.status(201).json({ message: "User created successfully" });
-    } catch (err) {     
-      if (err instanceof AppError){
+    } catch (err) {
+      if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
+
+      return res.status(500).json({ message: "Internal server error" });
+    }
+  }
+
+  async authenticate(req: Request, res: Response) {
+    const { email, password } = req.body;
+
+    try {
+      const auth = await this.customerUseCase.authenticate(email, password);
+
+      res.status(200).json({ token: auth });
+    } catch (err) {
+      if (err instanceof AppError)
+        return res.status(err.statusCode).json({ message: err.message });
 
       return res.status(500).json({ message: "Internal server error" });
     }
@@ -52,12 +67,11 @@ class CustomerController {
 
   async update(req: Request, res: Response) {
     const id = req.params.id;
-    const data = req.body
+    const data = req.body;
 
     try {
       await this.customerUseCase.update(id, data);
-      return res.status(200).json({message: "User updated successfully"});
-
+      return res.status(200).json({ message: "User updated successfully" });
     } catch (err) {
       console.error(err);
 
@@ -73,8 +87,7 @@ class CustomerController {
 
     try {
       await this.customerUseCase.delete(id);
-      return res.status(200).json({message: "User deleted successfully"});
-
+      return res.status(200).json({ message: "User deleted successfully" });
     } catch (err) {
       console.error(err);
 
