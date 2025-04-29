@@ -13,28 +13,28 @@ class CustomerUseCase implements CustomerUseCaseInterface {
   constructor(private repository: RepositoryInterface) {}
 
   async save(customer: Customer): Promise<boolean | Error> {
+    const isNotEmpty = Object.values(customer).every(
+      (value) => value !== null && value !== undefined && value.trim() !== ""
+    );
+
+    if (!isNotEmpty) {
+      throw new AppError(400, "Data cannot be empty");
+    }
+    
+    const emailVerification = await emailValidator(customer.email);
+
+    if (!emailVerification) throw new AppError(400, "Invalid email");
+
+    const cpfVerification = await cpfValidator(customer.cpf);
+    if (!cpfVerification) throw new AppError(400, "Invalid CPF");
+
+    customer.id = v4();
+
+    const hash_password = await hash(customer.password);
+
+    customer.password = hash_password;
+
     try {
-      customer.id = v4();
-
-      const isNotEmpty = Object.values(customer).every(
-        (value) => value !== null && value !== undefined && value.trim() !== ""
-      );
-
-      if (!isNotEmpty) {
-        throw new AppError(400, "Data cannot be empty");
-      }
-
-      const emailVerification = await emailValidator(customer.email);
-
-      if (!emailVerification) throw new AppError(400, "Invalid email");
-
-      const cpfVerification = await cpfValidator(customer.cpf);
-      if (!cpfVerification) throw new AppError(400, "Invalid CPF");
-
-      const hash_password = await hash(customer.password);
-
-      customer.password = hash_password;
-
       return await this.repository.save(customer);
     } catch (err: any) {
       console.error(err);
