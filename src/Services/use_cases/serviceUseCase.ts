@@ -8,10 +8,11 @@ class ServiceUseCase implements ServiceUseCaseInterface {
   constructor(private repository: ServicesRepositoryInterface) {}
 
   async save(data: Service): Promise<boolean | Error> {
-    const isNotEmpty = Object.entries(data).every(
+    const isNotEmpty = Object.values(data).every(
       (value) =>
         value !== null && value !== undefined && value.toString().trim() !== ""
     );
+    
 
     if (!isNotEmpty) {
       throw new AppError(400, "Data cannot be empty");

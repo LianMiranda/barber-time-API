@@ -53,7 +53,7 @@ class ServicesRepository implements ServicesRepositoryInterface {
   async deleteService(id: string): Promise<boolean | Error> {
     const query= "DELETE FROM services WHERE id=?";
     try {
-      await connection.execute(query, id);
+      await connection.execute(query, [id]);
       return true;
     } catch (err) {
       console.error(err);
