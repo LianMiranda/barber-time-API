@@ -1,5 +1,5 @@
 class Appointment {
-  public id?: number;
+  public id?: string;
   schedule_at: Date;
   serviceId: string;
   customerId: string;

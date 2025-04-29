@@ -1,12 +1,12 @@
 import { Appointment } from "../../entity/appointment";
 
 export interface AppointmentRepositoryInterface {
-    create(appointment: Appointment):Promise<boolean>
+    create(data: Appointment):Promise<boolean>
     findAll(): Promise<Appointment[]>;
-    findById(id: number): Promise<Appointment[] | null>;
+    findById(id: string): Promise<Appointment[]>;
     findByCustomerId(customerId: string): Promise<Appointment[]>;
     findByServiceId(serviceId: string): Promise<Appointment[]>;
-    findByDate(date: Date): Promise<Appointment[]>;
-    update(id: string, appointment: Appointment): Promise<boolean>;
-    delete(id: number): Promise<boolean>;
+    findByDate(schedule_at: Date): Promise<Appointment[]>;
+    update(id: string, data: Partial<Appointment>): Promise<boolean>;
+    delete(id: string): Promise<boolean>;
 }

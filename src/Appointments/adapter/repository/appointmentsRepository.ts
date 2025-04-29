@@ -3,13 +3,13 @@ import { Appointment } from "../../entity/appointment";
 import { AppointmentRepositoryInterface } from "./appointmentsRepositoryInterface";
 
 class AppointmentRepository implements AppointmentRepositoryInterface {
-  async create(appointment: Appointment): Promise<boolean> {
+  async create(data: Appointment): Promise<boolean> {
     const query = `INSERT INTO appointments (schedule_at, serviceId, customerId, status) VALUES (?, ?, ?, ?)`;
     const params = [
-      appointment.schedule_at,
-      appointment.serviceId,
-      appointment.customerId,
-      appointment.status,
+      data.schedule_at,
+      data.serviceId,
+      data.customerId,
+      data.status,
     ];
     try {
       await connection.execute(query, params);
@@ -26,11 +26,11 @@ class AppointmentRepository implements AppointmentRepositoryInterface {
     return rows as Appointment[];
   }
 
-  async findById(id: number): Promise<Appointment[] | null> {
+  async findById(id: string): Promise<Appointment[]> {
     const query = `SELECT * FROM appointments WHERE id = ?`;
 
     const [rows] = await connection.query(query, id);
-    return rows as Appointment[] | null;
+    return rows as Appointment[];
   }
 
   async findByCustomerId(customerId: string): Promise<Appointment[]> {
@@ -73,7 +73,7 @@ class AppointmentRepository implements AppointmentRepositoryInterface {
     }
   }
 
-  async delete(id: number): Promise<boolean> {
+  async delete(id: string): Promise<boolean> {
     const query = `DELETE FROM appointments WHERE id = ? LIMIT 1`;
     try {
       await connection.execute(query, [id]);
