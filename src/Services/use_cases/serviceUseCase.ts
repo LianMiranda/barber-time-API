@@ -44,6 +44,10 @@ class ServiceUseCase implements ServiceUseCaseInterface {
   }
 
   async update(id: string, data: Partial<Service>): Promise<boolean|Error> {
+
+    const verifyServiceExists = await this.getById(id);
+    if(!verifyServiceExists ) return verifyServiceExists;
+
     const isNotEmpty = Object.values(data).some(
       (value) =>
         value !== null && value !== undefined && value.toString().trim() !== ""
