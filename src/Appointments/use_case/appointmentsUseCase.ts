@@ -38,8 +38,8 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
 
   async findById(id: string): Promise<Appointment> {
     const appointment = await this.appointmentRepository.findById(id);
-
-    if (appointment == undefined)
+        
+    if (appointment.length == 0)
       throw new AppError(404, "Appointment not found");
 
     return appointment[0];
@@ -107,7 +107,9 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
           value.toString().trim() !== ""
       )
     );
-
+    
+    if(validFields.schedule_at) validFields.schedule_at = new Date(validFields.schedule_at);
+    
     try {
       return this.appointmentRepository.update(id, validFields);
     } catch (err) {
