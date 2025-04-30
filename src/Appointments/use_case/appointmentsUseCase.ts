@@ -18,6 +18,7 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
     }
 
     data.id = v4();
+    data.status = "in progress";
     try {
       return await this.appointmentRepository.create(data);
     } catch (err) {
