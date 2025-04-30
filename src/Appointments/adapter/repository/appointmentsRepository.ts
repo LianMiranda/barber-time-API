@@ -4,8 +4,9 @@ import { AppointmentRepositoryInterface } from "./appointmentsRepositoryInterfac
 
 class AppointmentRepository implements AppointmentRepositoryInterface {
   async create(data: Appointment): Promise<boolean> {
-    const query = `INSERT INTO appointments (schedule_at, serviceId, customerId, status) VALUES (?, ?, ?, ?)`;
+    const query = `INSERT INTO appointments (id, schedule_at, serviceId, customerId, status) VALUES (?, ?, ?, ?, ?)`;
     const params = [
+      data.id,
       data.schedule_at,
       data.serviceId,
       data.customerId,
