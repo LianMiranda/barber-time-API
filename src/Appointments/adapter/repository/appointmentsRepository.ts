@@ -62,9 +62,9 @@ class AppointmentRepository implements AppointmentRepositoryInterface {
     if (fields.length === 0) return false;
 
     const setClause = fields.map((field) => `${field} = ?`).join(", ");
-
-    const query = `UPDATE appointments SET ${setClause}, status = ? WHERE id = ?`;
-
+    
+    const query = `UPDATE appointments SET ${setClause} WHERE id = ?`;
+    
     try {
       await connection.execute(query, [...values, id]);
       return true;
