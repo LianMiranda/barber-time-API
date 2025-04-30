@@ -51,7 +51,7 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
     );
 
     if (appointments.length == 0)
-      throw new AppError(404, "No appointments found");
+      throw new AppError(404, "No customers found");
 
     return appointments;
   }
@@ -60,9 +60,8 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
     const appointments = await this.appointmentRepository.findByServiceId(
       serviceId
     );
-
     if (appointments.length == 0)
-      throw new AppError(404, "No appointments found");
+      throw new AppError(404, "No services found");
 
     return appointments;
   }
@@ -73,7 +72,7 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
     );
 
     if (appointments.length == 0)
-      throw new AppError(404, "No appointments found");
+      throw new AppError(404, "No date found");
 
     return appointments;
   }

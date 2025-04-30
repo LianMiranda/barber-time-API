@@ -10,10 +10,11 @@ class AppointmentController {
         await this.appointmentUseCase.create(data);
         res.status(201).json({ message: "Appointment created successfully" });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
-
+      
       return res.status(500).json({ message: "Internal server error" });
     }
   }
@@ -23,6 +24,7 @@ class AppointmentController {
       const appointments = await this.appointmentUseCase.findAll();
       res.status(200).json({ appointments });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
@@ -37,6 +39,7 @@ class AppointmentController {
       const appointment = await this.appointmentUseCase.findById(id);
       res.status(200).json({ appointment });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
@@ -50,6 +53,7 @@ class AppointmentController {
       const appointments = await this.appointmentUseCase.findByCustomerId(customerId);
       res.status(200).json({ appointments });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
@@ -60,10 +64,12 @@ class AppointmentController {
 
   async findByServiceId(req: Request, res: Response) {
     const serviceId = req.params.serviceId;
+    console.log(serviceId);
     try {
       const appointments = await this.appointmentUseCase.findByServiceId(serviceId);
       res.status(200).json({ appointments });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
@@ -71,12 +77,14 @@ class AppointmentController {
       return res.status(500).json({ message: "Internal server error" });
     }
   }
+
   async findByDate(req: Request, res: Response) {
-    const schedule_at = req.body.schedule_at;
+    const schedule_at = new Date(req.params.schedule_at);
     try {
       const appointments = await this.appointmentUseCase.findByDate(schedule_at);
       res.status(200).json({ appointments });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
@@ -92,6 +100,7 @@ class AppointmentController {
       await this.appointmentUseCase.update(id, data);
       res.status(200).json({ message: "Appointment updated successfully" });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }
@@ -106,6 +115,7 @@ class AppointmentController {
       await this.appointmentUseCase.delete(id);
       res.status(200).json({ message: "Appointment deleted successfully" });
     } catch (err) {
+      console.error(err);
       if (err instanceof AppError) {
         return res.status(err.statusCode).json({ message: err.message });
       }

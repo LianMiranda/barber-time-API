@@ -22,11 +22,11 @@ appointmentRoutes.get(
   }
 );
 
-appointmentRoutes.get("/appointments/service/:sercviceId", async (req, res) => {
+appointmentRoutes.get("/appointments/service/:serviceId", async (req, res) => {
   await controller.findByServiceId(req, res);
 });
 
-appointmentRoutes.get("/appointments/date", async (req, res) => {
+appointmentRoutes.get("/appointments/date/:schedule_at", async (req, res) => {
   await controller.findByDate(req, res);
 });
 
