@@ -16,6 +16,15 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
     if (!checkEmptyFields) {
       throw new AppError(400, "Data cannot be empty");
     }
+    
+    if(data.schedule_at) {
+      const schedule_at = new Date(data.schedule_at);
+      const currentDate = new Date();
+
+      if (schedule_at < currentDate) {
+        throw new AppError(400, "Schedule date cannot be in the past");
+      }
+    }
 
     data.id = v4();
     data.status = "in progress";
@@ -98,6 +107,15 @@ class AppointmentUseCase implements AppointmentUseCaseInterface {
       );
     }
 
+    if(data.schedule_at) {
+      const schedule_at = new Date(data.schedule_at);
+      const currentDate = new Date();
+
+      if (schedule_at < currentDate) {
+        throw new AppError(400, "Schedule date cannot be in the past");
+      }
+    }
+    
     const validFields = Object.fromEntries(
       Object.entries(data).filter(
         // eslint-disable-next-line @typescript-eslint/no-unused-vars

@@ -64,7 +64,6 @@ class AppointmentController {
 
   async findByServiceId(req: Request, res: Response) {
     const serviceId = req.params.serviceId;
-    console.log(serviceId);
     try {
       const appointments = await this.appointmentUseCase.findByServiceId(serviceId);
       res.status(200).json({ appointments });
